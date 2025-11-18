@@ -1,0 +1,375 @@
+{
+  "version": "1.0.0",
+  "transformations": [
+    {
+      "id": "uppercase",
+      "label": "Uppercase",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {},
+      "description": "Convert string to upper case",
+      "example": "\"blue\" → \"BLUE\""
+    },
+    {
+      "id": "lowercase",
+      "label": "Lowercase",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {},
+      "description": "Convert string to lower case",
+      "example": "\"SKU123\" → \"sku123\""
+    },
+    {
+      "id": "title_case",
+      "label": "Title Case",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {},
+      "description": "Capitalize the first letter of each word",
+      "example": "\"red cotton\" → \"Red Cotton\""
+    },
+    {
+      "id": "capitalize",
+      "label": "Capitalize",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {},
+      "description": "Capitalize only the first letter of the string",
+      "example": "\"apple\" → \"Apple\""
+    },
+    {
+      "id": "strip",
+      "label": "Strip Whitespace",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {
+        "chars": {
+          "type": "string",
+          "optional": true,
+          "description": "Characters to strip"
+        }
+      },
+      "description": "Trim whitespace from both ends",
+      "example": "\" SKU \" → \"SKU\""
+    },
+    {
+      "id": "replace",
+      "label": "Replace",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {
+        "old": {
+          "type": "string",
+          "required": true
+        },
+        "new": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "description": "Replace all occurrences of a substring",
+      "example": "\"SKU:123\" → \"SKU-123\" (old=\":\", new=\"-\")"
+    },
+    {
+      "id": "replace_regex",
+      "label": "Replace Regex",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {
+        "pattern": {
+          "type": "string",
+          "required": true
+        },
+        "repl": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "description": "Replace occurrences based on a regex pattern",
+      "example": "\"color:red\" → \"red\" (pattern=\"color:(\\\\w+)\", repl=\"$1\")"
+    },
+    {
+      "id": "split",
+      "label": "Split",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "list",
+      "argSchema": {
+        "delimiter": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "description": "Split string into list by delimiter",
+      "example": "\"S,M,L\" → [\"S\",\"M\",\"L\"]"
+    },
+    {
+      "id": "split_comma",
+      "label": "Split by Comma",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "list",
+      "argSchema": {},
+      "description": "Convenience method for comma-split",
+      "example": "\"A,B\" → [\"A\",\"B\"]"
+    },
+    {
+      "id": "join",
+      "label": "Join",
+      "category": "text",
+      "inputTypes": ["list"],
+      "outputType": "string",
+      "argSchema": {
+        "delimiter": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "description": "Join a list of values into a string with delimiter",
+      "example": "[\"red\",\"blue\"] → \"red,blue\" (delimiter=\",\")"
+    },
+    {
+      "id": "prefix",
+      "label": "Prefix",
+      "category": "text",
+      "inputTypes": ["string", "list"],
+      "outputType": "any",
+      "argSchema": {
+        "prefix_str": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "description": "Prepend a string",
+      "example": "\"123\" → \"SKU-123\" (prefix_str=\"SKU-\")"
+    },
+    {
+      "id": "suffix",
+      "label": "Suffix",
+      "category": "text",
+      "inputTypes": ["string", "list"],
+      "outputType": "any",
+      "argSchema": {
+        "suffix_str": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "description": "Append a string",
+      "example": "\"SKU\" → \"SKU-2025\" (suffix_str=\"-2025\")"
+    },
+    {
+      "id": "clean_html",
+      "label": "Clean HTML",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {},
+      "description": "Remove HTML tags",
+      "example": "\"<p>Text</p>\" → \"Text\""
+    },
+    {
+      "id": "clean_upc",
+      "label": "Clean UPC",
+      "category": "text",
+      "inputTypes": ["string"],
+      "outputType": "string",
+      "argSchema": {},
+      "description": "Remove non-numeric characters from UPC",
+      "example": "\"UPC-123456\" → \"123456\""
+    },
+    {
+      "id": "clean_numeric_value",
+      "label": "Clean Numeric Value",
+      "category": "number",
+      "inputTypes": ["string"],
+      "outputType": "number",
+      "argSchema": {},
+      "description": "Remove non-numeric characters from text and parse number",
+      "example": "\"$1,299.99\" → 1299.99"
+    },
+    {
+      "id": "addition",
+      "label": "Addition",
+      "category": "number",
+      "inputTypes": ["number"],
+      "outputType": "number",
+      "argSchema": {
+        "amount": {
+          "type": "number",
+          "required": true
+        }
+      },
+      "description": "Add a constant to numeric value",
+      "example": "10 → 15 (amount=5)"
+    },
+    {
+      "id": "subtraction",
+      "label": "Subtraction",
+      "category": "number",
+      "inputTypes": ["number"],
+      "outputType": "number",
+      "argSchema": {
+        "amount": {
+          "type": "number",
+          "required": true
+        }
+      },
+      "description": "Subtract from numeric value",
+      "example": "10 → 5 (amount=5)"
+    },
+    {
+      "id": "multiplication",
+      "label": "Multiplication",
+      "category": "number",
+      "inputTypes": ["number"],
+      "outputType": "number",
+      "argSchema": {
+        "factor": {
+          "type": "number",
+          "required": true
+        }
+      },
+      "description": "Multiply numeric value",
+      "example": "2 → 6 (factor=3)"
+    },
+    {
+      "id": "division",
+      "label": "Division",
+      "category": "number",
+      "inputTypes": ["number"],
+      "outputType": "number",
+      "argSchema": {
+        "divisor": {
+          "type": "number",
+          "required": true
+        }
+      },
+      "description": "Divide numeric value",
+      "example": "10 → 5 (divisor=2)"
+    },
+    {
+      "id": "percentage",
+      "label": "Percentage",
+      "category": "number",
+      "inputTypes": ["number"],
+      "outputType": "number",
+      "argSchema": {
+        "factor": {
+          "type": "number",
+          "default": 100
+        }
+      },
+      "description": "Calculate percentage of a number",
+      "example": "1000 → 100 (factor=10)"
+    },
+    {
+      "id": "adjust_negative_to_zero",
+      "label": "Adjust Negative to Zero",
+      "category": "number",
+      "inputTypes": ["number"],
+      "outputType": "number",
+      "argSchema": {},
+      "description": "Convert negative numbers to zero",
+      "example": "-3 → 0"
+    },
+    {
+      "id": "zero_padding",
+      "label": "Zero Padding",
+      "category": "number",
+      "inputTypes": ["number", "string"],
+      "outputType": "string",
+      "argSchema": {
+        "value": {
+          "type": "number",
+          "required": true,
+          "description": "Target length"
+        }
+      },
+      "description": "Pad number with leading zeros",
+      "example": "5 → \"05\" (value=2)"
+    },
+    {
+      "id": "date_only",
+      "label": "Date Only",
+      "category": "date",
+      "inputTypes": ["string", "date"],
+      "outputType": "string",
+      "argSchema": {},
+      "description": "Extract only the date portion (remove time)",
+      "example": "\"2025-06-13T10:00\" → \"2025-06-13\""
+    },
+    {
+      "id": "set",
+      "label": "Set Value",
+      "category": "control",
+      "inputTypes": ["any"],
+      "outputType": "any",
+      "argSchema": {
+        "value": {
+          "type": "any",
+          "required": true
+        }
+      },
+      "description": "Force value to a specific constant",
+      "example": "any → \"constant\""
+    },
+    {
+      "id": "set_number",
+      "label": "Set Number",
+      "category": "control",
+      "inputTypes": ["any"],
+      "outputType": "number",
+      "argSchema": {
+        "value": {
+          "type": "number",
+          "required": true
+        }
+      },
+      "description": "Force value to a specific number",
+      "example": "any → 42"
+    },
+    {
+      "id": "copy",
+      "label": "Copy",
+      "category": "control",
+      "inputTypes": ["any"],
+      "outputType": "any",
+      "argSchema": {},
+      "description": "Pass through value unchanged",
+      "example": "\"value\" → \"value\""
+    },
+    {
+      "id": "rejects",
+      "label": "Reject Row",
+      "category": "control",
+      "inputTypes": ["any"],
+      "outputType": "null",
+      "argSchema": {},
+      "description": "Mark row for rejection",
+      "example": "any → [row rejected]"
+    },
+    {
+      "id": "vlookup_map",
+      "label": "Vlookup Map",
+      "category": "lookup",
+      "inputTypes": ["string"],
+      "outputType": "any",
+      "argSchema": {
+        "mapping": {
+          "type": "object",
+          "required": true
+        }
+      },
+      "description": "Map a value via a lookup table",
+      "example": "\"M\" → \"Medium\""
+    }
+  ]
+}

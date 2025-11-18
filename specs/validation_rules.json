@@ -1,0 +1,115 @@
+{
+  "version": "1.0.0",
+  "validation_rules": [
+    {
+      "id": "required",
+      "label": "Required",
+      "description": "Value must be present and non-empty",
+      "argSchema": {}
+    },
+    {
+      "id": "regex",
+      "label": "Regex Pattern",
+      "description": "Value must match a regex pattern",
+      "argSchema": {
+        "pattern": {
+          "type": "string",
+          "required": true
+        },
+        "flags": {
+          "type": "string",
+          "optional": true
+        }
+      }
+    },
+    {
+      "id": "enum",
+      "label": "Enum Values",
+      "description": "Value must be one of allowed values",
+      "argSchema": {
+        "values": {
+          "type": "array",
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "min_length",
+      "label": "Minimum Length",
+      "description": "String length must be at least min value",
+      "argSchema": {
+        "value": {
+          "type": "number",
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "max_length",
+      "label": "Maximum Length",
+      "description": "String length must not exceed max value",
+      "argSchema": {
+        "value": {
+          "type": "number",
+          "required": true
+        }
+      }
+    },
+    {
+      "id": "numeric_range",
+      "label": "Numeric Range",
+      "description": "Number must fall within min/max range",
+      "argSchema": {
+        "min": {
+          "type": "number",
+          "optional": true
+        },
+        "max": {
+          "type": "number",
+          "optional": true
+        }
+      }
+    },
+    {
+      "id": "date_before",
+      "label": "Date Before",
+      "description": "Date must be before given date or field",
+      "argSchema": {
+        "date": {
+          "type": "string",
+          "optional": true
+        },
+        "field": {
+          "type": "string",
+          "optional": true
+        }
+      }
+    },
+    {
+      "id": "date_after",
+      "label": "Date After",
+      "description": "Date must be after given date or field",
+      "argSchema": {
+        "date": {
+          "type": "string",
+          "optional": true
+        },
+        "field": {
+          "type": "string",
+          "optional": true
+        }
+      }
+    },
+    {
+      "id": "custom_expression",
+      "label": "Custom Expression",
+      "description": "Evaluate arbitrary expression referencing fields",
+      "argSchema": {
+        "expression": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
+  ]
+}

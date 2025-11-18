@@ -1,0 +1,208 @@
+name: Python SDK CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'python-sdk/**'
+      - 'specs/**'
+      - '.github/workflows/python-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'python-sdk/**'
+      - 'specs/**'
+
+jobs:
+  test:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('python-sdk/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      working-directory: ./python-sdk
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-cov pytest-asyncio
+        pip install openpyxl  # For Excel support
+        # Install SDK in development mode
+        pip install -e .
+    
+    - name: Lint with ruff (if available)
+      working-directory: ./python-sdk
+      run: |
+        pip install ruff || true
+        ruff check saastify_edge/ || true
+      continue-on-error: true
+    
+    - name: Type check with mypy
+      working-directory: ./python-sdk
+      run: |
+        pip install mypy || true
+        mypy saastify_edge/ --ignore-missing-imports || true
+      continue-on-error: true
+    
+    - name: Run unit tests
+      working-directory: ./python-sdk
+      run: |
+        pytest tests/test_transformations.py -v
+        pytest tests/test_parsers_validation.py -v
+    
+    - name: Run integration tests
+      working-directory: ./python-sdk
+      run: |
+        pytest tests/test_integration_pipelines.py -v --tb=short
+      continue-on-error: true
+    
+    - name: Generate coverage report
+      working-directory: ./python-sdk
+      run: |
+        pytest tests/ --cov=saastify_edge --cov-report=xml --cov-report=term
+      continue-on-error: true
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./python-sdk/coverage.xml
+        flags: python
+        name: codecov-python-sdk
+      continue-on-error: true
+
+  build:
+    name: Build Distribution
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+    
+    - name: Build package
+      working-directory: ./python-sdk
+      run: |
+        python -m build
+    
+    - name: Check package
+      working-directory: ./python-sdk
+      run: |
+        twine check dist/*
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-dist
+        path: python-sdk/dist/
+
+  docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Log in to Google Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: gcr.io
+        username: _json_key
+        password: ${{ secrets.GCR_JSON_KEY }}
+      if: github.ref == 'refs/heads/main' && secrets.GCR_JSON_KEY != ''
+      continue-on-error: true
+    
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: gcr.io/${{ secrets.GCP_PROJECT_ID }}/edge-sdk
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: Build Docker image (test only)
+      uses: docker/build-push-action@v4
+      with:
+        context: ./python-sdk
+        push: false
+        tags: edge-sdk:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    # Uncomment to push to GCR
+    # - name: Push to GCR
+    #   uses: docker/build-push-action@v4
+    #   with:
+    #     context: ./python-sdk
+    #     push: true
+    #     tags: ${{ steps.meta.outputs.tags }}
+    #   if: github.ref == 'refs/heads/main'
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      working-directory: ./python-sdk
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety bandit
+    
+    - name: Run safety check
+      working-directory: ./python-sdk
+      run: |
+        safety check || true
+      continue-on-error: true
+    
+    - name: Run bandit security scan
+      working-directory: ./python-sdk
+      run: |
+        bandit -r saastify_edge/ -f json -o bandit-report.json || true
+      continue-on-error: true
+    
+    - name: Upload security report
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: python-sdk/bandit-report.json
+      if: always()
+      continue-on-error: true
