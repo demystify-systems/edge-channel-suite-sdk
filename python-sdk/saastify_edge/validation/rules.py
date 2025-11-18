@@ -230,7 +230,125 @@ def custom_expression(value: Any, args: Dict[str, Any], context: Optional[Dict[s
     return None
 
 
-# Validation rules registry
+def email(value: Any, args: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Validate email format"""
+    if value is None or value == "":
+        return None
+    
+    if not isinstance(value, str):
+        return "Email must be a string"
+    
+    # Simple email regex
+    import re
+    email_pattern = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+    if not re.match(email_pattern, value):
+        return "Invalid email format"
+    
+    return None
+
+
+def url(value: Any, args: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Validate URL format"""
+    if value is None or value == "":
+        return None
+    
+    if not isinstance(value, str):
+        return "URL must be a string"
+    
+    # URL validation
+    import re
+    url_pattern = r'^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)$'
+    if not re.match(url_pattern, value):
+        return "Invalid URL format"
+    
+    return None
+
+
+def phone(value: Any, args: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Validate phone number format"""
+    if value is None or value == "":
+        return None
+    
+    if not isinstance(value, str):
+        return "Phone number must be a string"
+    
+    # Remove all non-digit characters
+    import re
+    digits = re.sub(r'\D', '', value)
+    
+    # Phone numbers are typically 10-15 digits
+    if len(digits) < 10 or len(digits) > 15:
+        return "Phone number must be 10-15 digits"
+    
+    return None
+
+
+def credit_card(value: Any, args: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Validate credit card number using Luhn algorithm"""
+    if value is None or value == "":
+        return None
+    
+    if not isinstance(value, str):
+        return "Credit card number must be a string"
+    
+    # Remove all non-digit characters
+    import re
+    digits = re.sub(r'\D', '', value)
+    
+    # Must be 13-19 digits
+    if len(digits) < 13 or len(digits) > 19:
+        return "Credit card number must be 13-19 digits"
+    
+    # Luhn algorithm
+    def luhn_check(card_number: str) -> bool:
+        total = 0
+        reverse_digits = card_number[::-1]
+        
+        for i, digit in enumerate(reverse_digits):
+            n = int(digit)
+            if i % 2 == 1:
+                n *= 2
+                if n > 9:
+                    n -= 9
+            total += n
+        
+        return total % 10 == 0
+    
+    if not luhn_check(digits):
+        return "Invalid credit card number (failed Luhn check)"
+    
+    return None
+
+
+def ip_address(value: Any, args: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Optional[str]:
+    """Validate IP address (IPv4 or IPv6)"""
+    if value is None or value == "":
+        return None
+    
+    if not isinstance(value, str):
+        return "IP address must be a string"
+    
+    import re
+    
+    # IPv4 validation
+    ipv4_pattern = r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+    if re.match(ipv4_pattern, value):
+        return None
+    
+    # IPv6 validation (simplified)
+    ipv6_pattern = r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$'
+    if re.match(ipv6_pattern, value):
+        return None
+    
+    # IPv6 with :: compression
+    ipv6_compressed_pattern = r'^(([0-9a-fA-F]{1,4}:)*)?::([0-9a-fA-F]{1,4}:)*[0-9a-fA-F]{1,4}$'
+    if re.match(ipv6_compressed_pattern, value):
+        return None
+    
+    return "Invalid IP address format"
+
+
+# Validation rules registry - ALL 14 RULES
 VALIDATION_RULES = {
     "required": required,
     "regex": regex,
@@ -241,4 +359,9 @@ VALIDATION_RULES = {
     "date_before": date_before,
     "date_after": date_after,
     "custom_expression": custom_expression,
+    "email": email,
+    "url": url,
+    "phone": phone,
+    "credit_card": credit_card,
+    "ip_address": ip_address,
 }

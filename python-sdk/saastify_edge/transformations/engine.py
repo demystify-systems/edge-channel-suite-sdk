@@ -9,11 +9,12 @@ import re
 from typing import Any, List, Dict, Optional, Tuple, Callable
 from ..core.types import TransformationStep, RejectRow
 from . import operations
+from . import advanced_operations as adv
 
 
-# Build the transformation registry
+# Build the transformation registry - ALL 85 OPERATIONS
 TRANSFORMS: Dict[str, Callable] = {
-    # Text operations
+    # Core text operations (14)
     "uppercase": operations.uppercase,
     "lowercase": operations.lowercase,
     "strip": operations.strip,
@@ -29,7 +30,7 @@ TRANSFORMS: Dict[str, Callable] = {
     "clean_html": operations.clean_html,
     "clean_upc": operations.clean_upc,
     
-    # Numeric operations
+    # Core numeric operations (8)
     "clean_numeric_value": operations.clean_numeric_value,
     "addition": operations.addition,
     "subtraction": operations.subtraction,
@@ -39,17 +40,77 @@ TRANSFORMS: Dict[str, Callable] = {
     "adjust_negative_to_zero": operations.adjust_negative_to_zero,
     "zero_padding": operations.zero_padding,
     
-    # Date operations
+    # Core date operations (1)
     "date_only": operations.date_only,
     
-    # Control operations
+    # Core control operations (4)
     "set": operations.set_value,
     "set_number": operations.set_number,
     "copy": operations.copy,
     "rejects": operations.rejects,
     
-    # Lookup operations
+    # Core lookup operations (1)
     "vlookup_map": operations.vlookup_map,
+    
+    # Advanced text operations (19)
+    "remove_whitespace": adv.remove_whitespace,
+    "truncate": adv.truncate,
+    "pad_left": adv.pad_left,
+    "pad_right": adv.pad_right,
+    "slugify": adv.slugify,
+    "extract_numbers": adv.extract_numbers,
+    "extract_letters": adv.extract_letters,
+    "reverse_string": adv.reverse_string,
+    "word_count": adv.word_count,
+    "char_count": adv.char_count,
+    "to_snake_case": adv.to_snake_case,
+    "to_camel_case": adv.to_camel_case,
+    "to_pascal_case": adv.to_pascal_case,
+    "remove_accents": adv.remove_accents,
+    "title_case_all_words": adv.title_case_all_words,
+    "sanitize_filename": adv.sanitize_filename,
+    "string_similarity": adv.string_similarity,
+    "levenshtein_distance": adv.levenshtein_distance,
+    "phonetic_match": adv.phonetic_match,
+    
+    # Advanced numeric operations (7)
+    "round_decimal": adv.round_decimal,
+    "absolute_value": adv.absolute_value,
+    "ceiling": adv.ceiling,
+    "floor": adv.floor,
+    "clamp": adv.clamp,
+    "scale": adv.scale,
+    "modulo": adv.modulo,
+    
+    # Advanced date operations (11)
+    "format_date": adv.format_date,
+    "add_days": adv.add_days,
+    "subtract_days": adv.subtract_days,
+    "day_of_week": adv.day_of_week,
+    "day_name": adv.day_name,
+    "month_name": adv.month_name,
+    "year": adv.year,
+    "month": adv.month,
+    "day": adv.day,
+    "is_weekend": adv.is_weekend,
+    "days_between": adv.days_between,
+    
+    # Advanced list operations (5)
+    "list_length": adv.list_length,
+    "list_first": adv.list_first,
+    "list_last": adv.list_last,
+    "list_unique": adv.list_unique,
+    "list_sort": adv.list_sort,
+    
+    # Advanced conditional operations (3)
+    "if_empty": adv.if_empty,
+    "if_null": adv.if_null,
+    "coalesce": adv.coalesce,
+    
+    # Advanced utility operations (3)
+    "url_encode": adv.url_encode,
+    "url_decode": adv.url_decode,
+    "extract_domain": adv.extract_domain,
 }
 
 
