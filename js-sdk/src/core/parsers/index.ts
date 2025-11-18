@@ -5,11 +5,12 @@
 export * from './csv';
 export * from './json';
 export * from './xml';
+export * from './xlsx';
 
 // Convenience function to detect and parse based on file extension
 export async function parseFile(
   filePath: string,
-  format?: 'csv' | 'tsv' | 'json' | 'xml'
+  format?: 'csv' | 'tsv' | 'json' | 'xml' | 'xlsx' | 'xlsm'
 ): Promise<Record<string, any>[]> {
   const detectedFormat = format || detectFormat(filePath);
   
@@ -29,6 +30,16 @@ export async function parseFile(
     case 'xml':
       const { parseXMLFile } = await import('./xml');
       return parseXMLFile(filePath);
+    
+    case 'xlsx':
+    case 'xlsm':
+      const { XLSXParser } = await import('./xlsx');
+      const parser = new XLSXParser();
+      const results: Record<string, any>[] = [];
+      for await (const row of parser.parse(filePath)) {
+        results.push(row.data);
+      }
+      return results;
     
     default:
       throw new Error(`Unsupported file format: ${detectedFormat}`);

@@ -17,6 +17,11 @@ const VALIDATORS: Record<string, ValidatorFn> = {
   date_before: rules.dateBefore,
   date_after: rules.dateAfter,
   custom_expression: rules.customExpression,
+  email: rules.email,
+  url: rules.url,
+  phone: rules.phone,
+  credit_card: rules.creditCard,
+  ip_address: rules.ipAddress,
 };
 
 /**

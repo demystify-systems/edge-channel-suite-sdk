@@ -101,6 +101,19 @@ const TRANSFORMS: Record<string, TransformFn> = {
   clean_html: utility.cleanHtml,
   clean_upc: utility.cleanUpc,
   vlookup_map: utility.vlookupMap,
+  url_encode: utility.urlEncode,
+  url_decode: utility.urlDecode,
+  base64_encode: utility.base64Encode,
+  base64_decode: utility.base64Decode,
+  md5_hash: utility.md5Hash,
+  json_parse: utility.jsonParse,
+  json_stringify: utility.jsonStringify,
+  xml_escape: utility.xmlEscape,
+  html_unescape: utility.htmlUnescape,
+  currency_format: utility.currencyFormat,
+  levenshtein_distance: utility.levenshteinDistance,
+  string_similarity: utility.stringSimilarity,
+  extract_domain: utility.extractDomain,
 };
 
 /**

@@ -4,11 +4,12 @@
  */
 
 export interface FileBuilderOptions {
-  format: 'csv' | 'tsv' | 'json' | 'xml';
+  format: 'csv' | 'tsv' | 'json' | 'xml' | 'xlsx';
   headers?: string[];
   pretty?: boolean;
   rootElement?: string;
   itemElement?: string;
+  sheetName?: string;
 }
 
 export function buildCSV(
@@ -130,10 +131,57 @@ function escapeXML(str: string): string {
     .replace(/'/g, '&apos;');
 }
 
+/**
+ * Build XLSX file
+ * Note: Requires xlsx library (npm install xlsx)
+ */
+export async function buildXLSX(
+  data: Record<string, any>[],
+  options: { headers?: string[]; sheetName?: string } = {}
+): Promise<Buffer> {
+  // Dynamic import to avoid bundling if not used
+  let XLSX: any;
+  try {
+    XLSX = await import('xlsx');
+  } catch (error) {
+    throw new Error(
+      'xlsx library not installed. Install with: npm install xlsx'
+    );
+  }
+
+  const { headers, sheetName = 'Sheet1' } = options;
+  
+  if (data.length === 0) {
+    return Buffer.from('');
+  }
+  
+  // Get headers from first row or use provided
+  const cols = headers || Object.keys(data[0]);
+  
+  // Convert data to array of arrays
+  const rows = [cols]; // Header row
+  for (const row of data) {
+    rows.push(cols.map(col => row[col] !== undefined ? row[col] : ''));
+  }
+  
+  // Create workbook and worksheet
+  const worksheet = XLSX.utils.aoa_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+  
+  // Write to buffer
+  const buffer = XLSX.write(workbook, {
+    type: 'buffer',
+    bookType: 'xlsx',
+  });
+  
+  return buffer;
+}
+
 export function buildFile(
   data: Record<string, any>[],
   options: FileBuilderOptions
-): string {
+): string | Promise<Buffer> {
   switch (options.format) {
     case 'csv':
       return buildCSV(data, options);
@@ -143,6 +191,8 @@ export function buildFile(
       return buildJSON(data, options);
     case 'xml':
       return buildXML(data, options);
+    case 'xlsx':
+      return buildXLSX(data, options);
     default:
       throw new Error(`Unsupported format: ${options.format}`);
   }
