@@ -1,11 +1,44 @@
 {
   "name": "@saastify/edge-sdk",
   "version": "1.0.0",
-  "description": "SaaStify Catalog Edge SDK for JavaScript/TypeScript",
+  "description": "SaaStify Catalog Edge SDK for JavaScript/TypeScript - Product data transformation and import/export framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./transformations": {
+      "require": "./dist/transformations/index.js",
+      "import": "./dist/transformations/index.js",
+      "types": "./dist/transformations/index.d.ts"
+    },
+    "./validation": {
+      "require": "./dist/validation/index.js",
+      "import": "./dist/validation/index.js",
+      "types": "./dist/validation/index.d.ts"
+    },
+    "./export": {
+      "require": "./dist/export/index.js",
+      "import": "./dist/export/index.js",
+      "types": "./dist/export/index.d.ts"
+    },
+    "./core/parsers": {
+      "require": "./dist/core/parsers/index.js",
+      "import": "./dist/core/parsers/index.js",
+      "types": "./dist/core/parsers/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsc",
+    "prepublishOnly": "npm run build",
     "test": "jest",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
@@ -18,10 +51,31 @@
     "transformation",
     "validation",
     "import",
-    "export"
+    "export",
+    "ecommerce",
+    "amazon",
+    "shopify",
+    "flipkart",
+    "product-data",
+    "data-pipeline",
+    "n8n",
+    "typescript",
+    "javascript"
   ],
-  "author": "SaaStify",
+  "author": "SaaStify Team <support@saastify.ai>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/demystify-systems/edge-channel-suite-sdk.git",
+    "directory": "js-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/demystify-systems/edge-channel-suite-sdk/issues"
+  },
+  "homepage": "https://github.com/demystify-systems/edge-channel-suite-sdk#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@types/node": "^20.0.0",

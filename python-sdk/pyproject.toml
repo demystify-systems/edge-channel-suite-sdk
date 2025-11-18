@@ -10,17 +10,48 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "SaaStify Team"}
+    {name = "SaaStify Team", email = "support@saastify.ai"}
+]
+maintainers = [
+    {name = "SaaStify Team", email = "support@saastify.ai"}
+]
+keywords = [
+    "saastify",
+    "edge",
+    "catalog",
+    "transformation",
+    "validation",
+    "import",
+    "export",
+    "ecommerce",
+    "amazon",
+    "shopify",
+    "flipkart",
+    "product-data",
+    "data-pipeline"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business",
+    "Topic :: Text Processing",
 ]
+
+[project.urls]
+Homepage = "https://github.com/demystify-systems/edge-channel-suite-sdk"
+Documentation = "https://github.com/demystify-systems/edge-channel-suite-sdk/tree/main/docs"
+Repository = "https://github.com/demystify-systems/edge-channel-suite-sdk"
+Issues = "https://github.com/demystify-systems/edge-channel-suite-sdk/issues"
+Changelog = "https://github.com/demystify-systems/edge-channel-suite-sdk/blob/main/CHANGELOG.md"
 
 dependencies = [
     "aiohttp>=3.8.0",
