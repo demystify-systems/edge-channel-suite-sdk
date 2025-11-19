@@ -352,7 +352,7 @@ class JobStatusUpdater:
         
         Args:
             job_id: Job identifier
-        
+            
         Returns:
             Duration in seconds, or None if job not complete
         """
@@ -374,3 +374,50 @@ class JobStatusUpdater:
         
         duration = (updated_at - created_at).total_seconds()
         return duration
+    
+    async def get_job_by_request_id(
+        self,
+        request_id: str,
+        saas_edge_id: str
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Get job details by request_id (used in notebooks).
+        
+        Args:
+            request_id: Request/job identifier (request_id column in table)
+            saas_edge_id: Tenant identifier
+            
+        Returns:
+            Job record with request_args, or None if not found
+        """
+        job = await self.db.query_one(
+            "saas_edge_jobs",
+            {
+                "request_id": request_id,
+                "saas_edge_id": saas_edge_id
+            }
+        )
+        
+        return job
+    
+    async def get_job_request_args(
+        self,
+        request_id: str,
+        saas_edge_id: str
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Get request_args from job record by request_id.
+        
+        Args:
+            request_id: Request/job identifier
+            saas_edge_id: Tenant identifier
+            
+        Returns:
+            request_args dictionary, or None if job not found
+        """
+        job = await self.get_job_by_request_id(request_id, saas_edge_id)
+        
+        if not job:
+            return None
+        
+        return job.get("request_args", {})

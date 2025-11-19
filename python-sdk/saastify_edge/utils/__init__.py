@@ -37,6 +37,11 @@ from .sanitization import (
     sanitize_input,
 )
 
+from .template_schema import (
+    generate_json_schema,
+    get_or_generate_template_schema,
+)
+
 __all__ = [
     # Logging
     "setup_logging",
@@ -67,4 +72,7 @@ __all__ = [
     "sanitize_url",
     "sanitize_row",
     "sanitize_input",
+    # Template Schema
+    "generate_json_schema",
+    "get_or_generate_template_schema",
 ]
