@@ -20,6 +20,23 @@ from .metrics import (
     reset_metrics,
 )
 
+from .prometheus import (
+    PrometheusExporter,
+    export_prometheus_metrics,
+    create_prometheus_endpoint_handler,
+)
+
+from .sanitization import (
+    sanitize_html,
+    sanitize_scripts,
+    sanitize_sql_injection,
+    sanitize_filename,
+    sanitize_text,
+    sanitize_url,
+    sanitize_row,
+    sanitize_input,
+)
+
 __all__ = [
     # Logging
     "setup_logging",
@@ -37,4 +54,17 @@ __all__ = [
     "timer",
     "get_summary",
     "reset_metrics",
+    # Prometheus
+    "PrometheusExporter",
+    "export_prometheus_metrics",
+    "create_prometheus_endpoint_handler",
+    # Sanitization
+    "sanitize_html",
+    "sanitize_scripts",
+    "sanitize_sql_injection",
+    "sanitize_filename",
+    "sanitize_text",
+    "sanitize_url",
+    "sanitize_row",
+    "sanitize_input",
 ]

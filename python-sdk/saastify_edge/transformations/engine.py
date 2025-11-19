@@ -52,7 +52,7 @@ TRANSFORMS: Dict[str, Callable] = {
     # Core lookup operations (1)
     "vlookup_map": operations.vlookup_map,
     
-    # Advanced text operations (19)
+    # Advanced text operations (28)
     "remove_whitespace": adv.remove_whitespace,
     "truncate": adv.truncate,
     "pad_left": adv.pad_left,
@@ -72,6 +72,15 @@ TRANSFORMS: Dict[str, Callable] = {
     "string_similarity": adv.string_similarity,
     "levenshtein_distance": adv.levenshtein_distance,
     "phonetic_match": adv.phonetic_match,
+    "lstrip": adv.lstrip,
+    "strip_extra_spaces": adv.strip_extra_spaces,
+    "remove_non_ascii": adv.remove_non_ascii,
+    "remove_emojis": adv.remove_emojis,
+    "strip_quotes": adv.strip_quotes,
+    "substring": adv.substring,
+    "extract_alphanumeric": adv.extract_alphanumeric,
+    "extract_regex": adv.extract_regex,
+    "normalize_whitespace": adv.normalize_whitespace,
     
     # Advanced numeric operations (7)
     "round_decimal": adv.round_decimal,
@@ -82,7 +91,7 @@ TRANSFORMS: Dict[str, Callable] = {
     "scale": adv.scale,
     "modulo": adv.modulo,
     
-    # Advanced date operations (11)
+    # Advanced date operations (13)
     "format_date": adv.format_date,
     "add_days": adv.add_days,
     "subtract_days": adv.subtract_days,
@@ -94,13 +103,18 @@ TRANSFORMS: Dict[str, Callable] = {
     "day": adv.day,
     "is_weekend": adv.is_weekend,
     "days_between": adv.days_between,
+    "add_months": adv.add_months,
+    "date_diff_days": adv.date_diff_days,
     
-    # Advanced list operations (5)
+    # Advanced list operations (8)
     "list_length": adv.list_length,
     "list_first": adv.list_first,
     "list_last": adv.list_last,
     "list_unique": adv.list_unique,
     "list_sort": adv.list_sort,
+    "list_limit": adv.list_limit,
+    "list_filter_regex": adv.list_filter_regex,
+    "list_join_with_and": adv.list_join_with_and,
     
     # Advanced conditional operations (3)
     "if_empty": adv.if_empty,
@@ -111,6 +125,18 @@ TRANSFORMS: Dict[str, Callable] = {
     "url_encode": adv.url_encode,
     "url_decode": adv.url_decode,
     "extract_domain": adv.extract_domain,
+    
+    # Field operations (6)
+    "addition_fields": adv.addition_fields,
+    "diff_fields": adv.diff_fields,
+    "prod_fields": adv.prod_fields,
+    "ratio_fields": adv.ratio_fields,
+    "concat": adv.concat,
+    "field_copy_from": adv.field_copy_from,
+    
+    # Advanced lookup operations (2)
+    "lookup_category_path": adv.lookup_category_path,
+    "lookup_uom_conversion": adv.lookup_uom_conversion,
 }
 
 

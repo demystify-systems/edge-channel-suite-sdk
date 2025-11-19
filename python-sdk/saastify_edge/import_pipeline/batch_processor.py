@@ -217,15 +217,27 @@ class BatchProcessor:
         processor_func: Callable,
     ) -> BatchResult:
         """
-        Process batch with retry logic.
+        Process batch with retry logic and exponential backoff.
+        
+        Implements retry with exponential backoff as per PRD requirements:
+        - Retries up to `retry_attempts` times (default: 3)
+        - Exponential backoff: 2^attempt seconds, capped at 10 seconds
+        - Handles both timeout and general exceptions
+        - Continues processing subsequent batches on failure
         
         Args:
             batch_id: Batch identifier
             batch_data: List of rows to process
-            processor_func: Processing function
+            processor_func: Processing function (sync or async)
             
         Returns:
             BatchResult with success/error counts
+            
+        Example:
+            Batch fails on attempt 1 → wait 2 seconds → retry
+            Batch fails on attempt 2 → wait 4 seconds → retry
+            Batch fails on attempt 3 → wait 8 seconds → retry
+            If all retries fail, batch is marked as failed but processing continues
         """
         start_time = datetime.now()
         errors = []
